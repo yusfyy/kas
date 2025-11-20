@@ -1,0 +1,78 @@
+// Apps Script final dengan ID dan Sheet sudah diganti
+function doGet(e) {
+  try {
+    const nama = e.parameter.nama || "";
+    const pemasukan = e.parameter.pemasukan || "";
+    const pengeluaran = e.parameter.pengeluaran || "";
+    const keterangan = e.parameter.keterangan || "";
+    const tanggal = e.parameter.tanggal || "";
+
+    if (!nama || !tanggal) {
+      return ContentService
+        .createTextOutput("Error: Nama dan Tanggal wajib diisi")
+        .setMimeType(ContentService.MimeType.TEXT);
+    }
+
+    // Spreadsheet langsung hardcode
+    const ss = SpreadsheetApp.openById("1naa7J9j36UkgVkwUIyPsMO4BLql6QuS17fDuZeE1QBw");
+    const sheet = ss.getSheetByName("Sheet1");
+
+    // Tambahkan data
+    sheet.appendRow([nama, pemasukan, pengeluaran, keterangan, tanggal]);
+
+    return ContentService
+      .createTextOutput("Success: Data berhasil ditambahkan")
+      .setMimeType(ContentService.MimeType.TEXT)
+      .setHeader("Access-Control-Allow-Origin", "*")
+      .setHeader("Access-Control-Allow-Methods", "GET, POST")
+      .setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  } catch (error) {
+    return ContentService
+      .createTextOutput("Error: " + error.message)
+      .setMimeType(ContentService.MimeType.TEXT)
+      .setHeader("Access-Control-Allow-Origin", "*");
+  }
+}
+
+function doPost(e) {
+  return doGet(e); // agar POST juga bisa dipakai
+}
+
+
+
+
+function doGet(e) {
+  return main(e);
+}
+function doPost(e) {
+  return main(e);
+}
+
+function main(e) {
+  try {
+    const ss = SpreadsheetApp.openById("1naa7J9j36UkgVkwUIyPsMO4BLql6QuS17fDuZeE1QBw");
+    const sheet = ss.getSheetByName("Sheet1");
+
+    sheet.appendRow([
+      e.parameter.nama || "",
+      e.parameter.pemasukan || "",
+      e.parameter.pengeluaran || "",
+      e.parameter.keterangan || "",
+      e.parameter.tanggal || ""
+    ]);
+
+    return ContentService
+      .createTextOutput("OK")
+      .setMimeType(ContentService.MimeType.TEXT)
+      .setHeader("Access-Control-Allow-Origin", "*")
+      .setHeader("Access-Control-Allow-Methods", "GET, POST")
+      .setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  } catch (err) {
+    return ContentService
+      .createTextOutput("ERROR: " + err)
+      .setMimeType(ContentService.MimeType.TEXT)
+      .setHeader("Access-Control-Allow-Origin", "*");
+  }
+}

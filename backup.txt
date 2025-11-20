@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Kas Web</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 500px;
+            margin: 40px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background: #28a745;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div id="loginPage" class="container">
+    <h2>Login</h2>
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="login()">Konfirmasi</button>
+    <p id="loginError" style="color:red; display:none;">Username atau password salah!</p>
+</div>
+
+<div id="formPage" class="container hidden">
+    <h2>Input Data Kas</h2>
+    <input type="text" id="nama" placeholder="Nama Lengkap">
+    <input type="number" id="pemasukan" placeholder="Pemasukan">
+    <input type="number" id="pengeluaran" placeholder="Pengeluaran">
+    <input type="text" id="keterangan" placeholder="Keterangan (opsional)">
+    <input type="date" id="tanggal" placeholder="Tanggal">
+    <button onclick="kirimData()">Konfirmasi</button>
+
+    <table id="dataTable">
+        <thead>
+            <tr>
+                <th>Nama Lengkap</th>
+                <th>Pemasukan</th>
+                <th>Pengeluaran</th>
+                <th>Keterangan</th>
+                <th>Tanggal</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<script>
+function login() {
+    let user = document.getElementById('username').value;
+    let pass = document.getElementById('password').value;
+
+    if (user === "admin123" && pass === "admin123") {
+        document.getElementById('loginPage').classList.add('hidden');
+        document.getElementById('formPage').classList.remove('hidden');
+    } else {
+        document.getElementById('loginError').style.display = "block";
+    }
+}
+
+function kirimData() {
+    const url = "https://script.google.com/macros/s/AKfycbw0ktcN-XbCyHUDIzSZ4eWCLLKctLWZjlfO8qfDjmdMnLAsGCc80gj7q9gSvEqEeKRf/exec";
+
+    let nama = document.getElementById('nama').value || "-";
+    let pemasukan = document.getElementById('pemasukan').value || "-";
+    let pengeluaran = document.getElementById('pengeluaran').value || "-";
+    let keterangan = document.getElementById('keterangan').value || "-";
+    let tanggal = document.getElementById('tanggal').value || "-";
+
+    let data = {
+        nama: nama,
+        pemasukan: pemasukan,
+        pengeluaran: pengeluaran,
+        keterangan: keterangan,
+        tanggal: tanggal
+    };
+
+    fetch(url, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    });
+
+    tambahKeTabel(data);
+    kosongkanForm();
+}
+
+function tambahKeTabel(data) {
+    let tbody = document.querySelector('#dataTable tbody');
+    let row = document.createElement('tr');
+
+    row.innerHTML = `
+        <td>${data.nama}</td>
+        <td>${data.pemasukan}</td>
+        <td>${data.pengeluaran}</td>
+        <td>${data.keterangan}</td>
+        <td>${data.tanggal}</td>
+    `;
+
+    tbody.appendChild(row);
+}
+
+function kosongkanForm() {
+    document.getElementById('nama').value = "";
+    document.getElementById('pemasukan').value = "";
+    document.getElementById('pengeluaran').value = "";
+    document.getElementById('keterangan').value = "";
+    document.getElementById('tanggal').value = "";
+}
+</script>
+
+</body>
+</html>

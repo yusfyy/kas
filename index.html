@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>kas</title>
+<link rel="stylesheet" href="model.css">
+</head>
+<body>
+
+    <div class="starport">
+        <div class="starp1"></div>
+        <div class="starp2"></div>
+        <div class="starp3"></div>
+        <div class="starp4"></div>
+        <div class="starp5"></div>
+    </div>
+
+<div id="loginPage" class="login-container">
+    <div class="login-box">
+        <h2>Login</h2>
+        <input type="text" id="user" placeholder="Username" required />
+        <input type="password" id="pass" placeholder="Password" required />
+        <button class="konfirm1" onclick="login()">Konfirmasi</button>
+    </div>
+</div>
+
+<div id="mainPage" class="main-container" style="display:none;">
+    <h2>Input Kas</h2>
+    <div class="grid" id="card0">
+        <div class="card" id="card1">
+            <input type="text" id="nama" placeholder="Nama Lengkap" required />
+            <input type="number" id="pemasukan" placeholder="Pemasukan" required />
+            <input type="number" id="pengeluaran" placeholder="Pengeluaran" required />
+            <input type="text" id="keterangan" placeholder="Keterangan (opsional)" required />
+            <input type="date" id="tanggal" required />
+            <button class="kirim" onclick="kirimData()">Konfirmasi</button>
+        </div>
+
+        <div class="card" id="card2">
+            <h3>Riwayat Input</h3>
+            <table id="historyTable">
+                <thead>
+                    <tr>
+                        <th class="tabel1">Nama</th>
+                        <th class="tabel2">Pemasukan</th>
+                        <th class="tabel3">Pengeluaran</th>
+                        <th class="tabel4">Keterangan</th>
+                        <th class="tabel5">Tanggal</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+function login() {
+    let u = document.getElementById("user").value;
+    let p = document.getElementById("pass").value;
+
+    if (u === "admin123" && p === "admin123") {
+        document.getElementById("loginPage").style.display = "none";
+        document.getElementById("mainPage").style.display = "flex";
+    } else {
+        alert("Username/Password salah!");
+    }
+}
+
+// ==== GANTI URL APPSCRIPT KETIKA KAMU KASIH LINKNYA ====
+let url = "https://script.google.com/macros/s/AKfycbwdmUKNXPOhDBz-v5nd1od15GmZzD2H4sBO8BjbWxX9faYCaLc7NRC2QTrK2OAoafv5/exec";
+
+function kirimData() {
+    const data = {
+        nama: document.getElementById("nama").value,
+        pemasukan: document.getElementById("pemasukan").value,
+        pengeluaran: document.getElementById("pengeluaran").value,
+        keterangan: document.getElementById("keterangan").value,
+        tanggal: document.getElementById("tanggal").value
+    };
+
+    fetch(url, {
+        method: "POST",
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(e => {
+        alert("Data berhasil dikirim!");
+        tambahKeTabel(data);
+    })
+    .catch(err => alert("Gagal mengirim data"));
+}
+
+function tambahKeTabel(d) {
+    let row = `<tr>
+        <td>${d.nama}</td>
+        <td>${d.pemasukan}</td>
+        <td>${d.pengeluaran}</td>
+        <td>${d.keterangan}</td>
+        <td>${d.tanggal}</td>
+    </tr>`;
+    document.querySelector("#historyTable tbody").innerHTML += row;
+}
+</script>
+
+</body>
+</html>
