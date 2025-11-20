@@ -47,8 +47,12 @@ html {
 body {
         font-family: poppinsreg;
         margin: 0;
-        background: url(bg_portofolio.jpg) no-repeat center;
+        background: url(bg_portofolio.jpg) no-repeat;
         background-size: cover;
+        min-height: 100vh;
+        max-height: 100vw;
+        overflow: hidden;
+        background-position: center;
     }
 .login-container, .main-container {
         display: flex;
